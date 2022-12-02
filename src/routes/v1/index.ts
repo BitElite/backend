@@ -1,8 +1,8 @@
 import * as express from "express";
-import * as studentRoutes from "./student.route"
+import * as userRoutes from "./user.route"
 const router = express.Router();
 
-// student routes
-router.use(studentRoutes);
+// user routes
+router.use(userRoutes);
 
 export = router

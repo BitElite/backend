@@ -19,16 +19,17 @@
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv-safe": "^8.2.0",
+    "ethers": "^5.7.2",
     "express": "^4.17.1",
     "helmet": "^4.6.0",
     "http-status": "^1.5.0",
     "joi": "^17.4.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
+    "mongoose": "^5.13.3",
     "tslint": "^5.12.1",
     "typescript": "^4.3.5",
-    "winston": "^3.3.3",
-    "mongoose": "^5.13.3"
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.1",
@@ -39,7 +40,7 @@
     "@types/joi": "^17.2.3",
     "@types/lodash": "^4.14.171",
     "@types/moment": "^2.13.0",
-    "@types/winston": "^2.4.4",
-    "@types/mongoose": "^5.11.97"
+    "@types/mongoose": "^5.11.97",
+    "@types/winston": "^2.4.4"
   }
 }
