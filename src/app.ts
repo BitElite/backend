@@ -5,6 +5,7 @@ import { json, urlencoded } from 'body-parser';
 import * as logger from "./commons/logger";
 import * as error from "./commons/errorHandler"
 import * as routes from "./routes"
+import mongoose from "./commons/mongoose";
 
 const app = express();
 
@@ -32,6 +33,8 @@ app.use(error.handler);
 const startWithPort = async (port: Number) => {
     try {
         logger.info("Starting Api server .......");
+        //connect to mongodb
+        await mongoose.connect()
         app.listen(port, () => logger.info(`Api Server listening on port : ${port}`));
     } catch (e) {
         console.log(e);
