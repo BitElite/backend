@@ -4,6 +4,9 @@ import { Asset, AssetModel } from "../../models/asset/asset.model";
 import ethers from "ethers"
 import DedupService from "../../services/dedup.service";
 import Web3StorageService from "../../services/web3storage.service";
+const path = require('path');
+import * as fs from 'fs';
+
 
 const readAsset = async (req: Request, res: Response, next: NextFunction) => {
     let assetService = new AssetService(new AssetModel());
@@ -36,6 +39,16 @@ const createAsset = async (req: any, res: Response, next: NextFunction) => {
         let payload = req.body
         const walletAddress = req.token.walletAddress;
         payload.walletAddress = walletAddress;
+
+        const files = req.files as Express.Multer.File[];
+
+        let file = files[0]
+        let filename = file.filename
+        let absoluteFilePath = path.join(__dirname, '..', '..', '..', 'uploads', filename)
+
+        let readable = fs.createReadStream(absoluteFilePath)
+        
+        payload.readable = readable
 
         let response = await assetService.createAsset(payload, req.files);
 
