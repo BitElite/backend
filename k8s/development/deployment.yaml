@@ -28,4 +28,12 @@ spec:
           - name: JWT_SECRET
             value: 87kjbkdct72mn
           - name: JWT_TOKEN_EXPIRY
-            value: 60m
+            value: 600m
+          - name: WEB3_TOKEN
+            value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDg0MzMwZjBFYUY1YmYyNTQ2NWRiMTlFMTVERThiRWIyOUFmOWYwNmIiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NTc3ODAxNjE1MjAsIm5hbWUiOiJUU1YifQ.fI7E8MJcgS2v_JlhJ7OoGZyKMT96UV71Ncg0FKmxzUE
+          - name: WALLABY_RPC_PROVIDER
+            value: https://wallaby.node.glif.io/rpc/v0
+          - name: ADMIN_PRIVATE_KEY
+            value: 0x78129f6181d1f3493bf3fb4d1cdd4c751c2fa0acd67c130f729c4a782ec3f798
+          - name: DEDUP_CONTRACT_ADDRESS
+            value: 0xBBBd12E08D2Aa650192F2f04e5EE62a5E2Fc07aE
