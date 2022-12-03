@@ -10,7 +10,6 @@ export default class Web3StorageService {
 
     async put(path:string) {
         const file = await getFilesFromPath(path)
-        console.log(file)
         const cid = await this.storage.put(file)
         return cid;
     }
