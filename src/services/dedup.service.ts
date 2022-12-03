@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import { format } from "winston";
 import * as dedupABI from "../constants/abi/dedup.json"
 
 const privKey = process.env.ADMIN_PRIVATE_KEY;
@@ -15,7 +16,12 @@ export default class DedupService {
         this.dedupContract.attach(signer);
     }
 
-    async getPrice() { 
-        // console.log(this.dedupContract.getPrice())
+    async getPrice(CID:string, sizeInKB:number) { 
+        const result = await this.dedupContract.getCurrentPrice(
+            ethers.utils.formatBytes32String(CID),
+            sizeInKB
+        )
+        const formattedPrice = ethers.utils.formatEther(result.toNumber())
+        console.log(formattedPrice)
     }
 }

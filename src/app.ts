@@ -50,7 +50,7 @@ const start = async () => {
     let port = Number(appConfig.apiPort)
     await startWithPort(port);
     const dedupService = new DedupService()
-    await dedupService.getPrice()
+    await dedupService.getPrice("ContentID", 1000000)
 }
 
 export {
