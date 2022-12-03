@@ -8,9 +8,26 @@ export default class Web3StorageService {
         this.storage = new Web3Storage({ token: process.env.WEB3_TOKEN })
     }
 
-    async put(path:string) {
-        const file = await getFilesFromPath(path)
-        const cid = await this.storage.put(file)
-        return cid;
+    put(path: string) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const file = await getFilesFromPath(path)
+                const cid = await this.storage.put(file)
+                return cid;
+            } catch (e) {
+                return reject(e);
+            }
+        })
+    }
+
+    get(ipfsCid: string) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const file = await this.storage.get(ipfsCid)
+                return resolve(file)
+            } catch (e) {
+                return reject(e);
+            }
+        })
     }
 }

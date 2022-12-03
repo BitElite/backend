@@ -13,6 +13,7 @@ export type Asset  = {
     fileType?: string;
     fileSize?: number;
     filePath?: string;
+    fileOwners?: string[];
     ipfs_cid: string;
     deleted?: boolean | Date;
 }

@@ -5,7 +5,7 @@ const router = express.Router();
 import {fileHandler} from "../../middlewares/fileHandler";
 import * as multer from 'multer'
 import isAuth from '../../middlewares/isAuth';
-import {createAsset, readAsset} from "../../controllers/v1/asset.controller";
+import {createAsset, readAsset, verifyTransaction, getAssetPrice} from "../../controllers/v1/asset.controller";
 const fs = require("fs");
 
 
@@ -25,7 +25,13 @@ const upload = multer({ storage: storage })
 
 router.get('/asset/:ipfs_cid', isAuth, readAsset);
 
+// uploads the file
 router.post('/asset', isAuth, upload.array("files", 1), fileHandler, createAsset);
 
+// verify tx
+router.get('/transaction/verify/:transactionHash', isAuth, verifyTransaction)
+
+// get asset price
+router.get('/asset/price/:assetProof/:ipfsCid', isAuth, getAssetPrice)
 
 export = router;
