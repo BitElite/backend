@@ -13,20 +13,17 @@ const readAsset = async (req: Request, res: Response, next: NextFunction) => {
     try {
         let ipfs_cid = req.params.ipfs_cid;
 
+        console.log(`ipfs_cid --> ${ipfs_cid}`)
         // check if asset exists in db
         let asset = await assetService.readAsset(ipfs_cid);
-        if (!asset) {
-            return res.status(404).send({
-                success: false,
-                message: "Asset not found"
-            })
-        }
+        
         return res.send({
             success: true,
             data: {
                 asset
             }
         })
+        
     } catch (e) {
         console.log(e);
         return next(e)

@@ -26,6 +26,9 @@ export default class AssetService {
                     // check the price of the asset
                     let ipfsCid = payload.ipfsCid;
 
+                    console.log(`ipfsCid --> ${ipfsCid}`)
+                    console.log(`file.size --> ${file.size}`)
+
                     let priceResponse = await dedupService.getPrice(ipfsCid, file.size);
 
                     let fileName = file.originalname
@@ -83,9 +86,9 @@ export default class AssetService {
             try {
                 let asset = await this.asset.findOne({ ipfs_cid, deleted: false }, { deleted: 0 });
                 if (!asset) {
-                    return reject("Asset not found");
+                    throw new Error("Asset not found");
                 }
-                resolve(asset);
+                return resolve(asset);
             } catch (e) {
                 return reject(e);
             }
@@ -98,11 +101,12 @@ export default class AssetService {
 
                 let asset = await this.asset.findOne({ ipfs_cid, deleted: false }, { deleted: 0 });
                 if (!asset) {
-                    return reject("Asset not found");
+                    throw new Error("Asset not found");
                 }
                 // now perform db update
                 let response = await this.asset.updateOne({ ipfs_cid, deleted: false }, payload);
 
+                return resolve(response);
             } catch (e) {
                 return reject(e);
             }
