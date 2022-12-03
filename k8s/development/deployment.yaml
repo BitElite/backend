@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pie-backend
+  namespace: pie-development
+spec:
+  selector:
+    matchLabels:
+      run: pie-backend
+  template:
+    metadata:
+      labels:
+        run: pie-backend
+    spec:
+      containers:
+      - name: pie-backend
+        image: asia-south1-docker.pkg.dev/jiox-328108/pie-docker-development/pie-backend:latest
+        imagePullPolicy: Always
+        env:
+          - name: NODE_ENV
+            value: development
+          - name: APIPORT
+            value: "8000"
+          - name: MONGO_URI
+            value: mongodb+srv://bitelite:7coB2a95uR2ylV6A@cluster0.rvvg7.mongodb.net/bitelitedb
+          - name: SECRET_MESSAGE
+            value: Signing
+          - name: JWT_SECRET
+            value: 87kjbkdct72mn
+          - name: JWT_TOKEN_EXPIRY
+            value: 60m
