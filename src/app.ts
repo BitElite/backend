@@ -6,6 +6,7 @@ import * as logger from "./commons/logger";
 import * as error from "./commons/errorHandler"
 import * as routes from "./routes"
 import mongoose from "./commons/mongoose";
+import DedupService from 'services/dedup.service';
 
 const app = express();
 
@@ -47,6 +48,8 @@ const startWithPort = async (port: Number) => {
 const start = async () => {
     let port = Number(appConfig.apiPort)
     await startWithPort(port);
+    const dedupService = new DedupService()
+    await dedupService.getPrice()
 }
 
 export {
