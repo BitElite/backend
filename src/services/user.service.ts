@@ -19,7 +19,6 @@ export default class UserService {
                 // verify signed message using ethers and get address
                 const address = ethers.utils.verifyMessage(appConfig.secret, payload.signed_msg);
 
-                console.log(`address --> ${address}`)
                 if (!address) {
                     return reject(new ApiError(connectionErrors.UNAUTHORIZED, 401, [{
                         signed_msg: "is not valid"
@@ -29,7 +28,6 @@ export default class UserService {
                 if (isNull(user)) {
                     user = {};
                     user.walletAddress = address;
-                    user.created_at = new Date();
                     user = await this.user.save(user);
                 }
                 return resolve(user);
@@ -37,5 +35,16 @@ export default class UserService {
                 return reject(e)
             }
         })
+    }
+
+    /**
+     *
+     * @param user {User}
+     */
+     getUserToken(user: any): string {
+        return jwt.sign({
+            _id: user._id,
+            walletAddress: user.walletAddress
+        }, appConfig.jwtSecret, { expiresIn: appConfig.jwtTokenExpiry })
     }
 }

@@ -9,23 +9,13 @@ const UserSchema = new mongoose.Schema(
 
 export type User  = {
     _id?: string
-    firstName?: string;
-    lastName?: string;
     walletAddress:string;
-    username?: string;
-    email?:string;
-    verified: boolean;
-    profileImage?: string;
-    deleted: boolean | Date,
-    created_at: Date
+    deleted?: boolean | Date
 }
 
 export type Query  = {
     _id?: string
     walletAddress:string;
-    username?: string;
-    email?:string;
-    verified?: boolean;
     deleted: boolean | Date,
 }
 

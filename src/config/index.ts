@@ -1,4 +1,5 @@
 import { config } from "dotenv-safe";
+import { Algorithm } from "jsonwebtoken"
 
 export interface MongoConfig {
     uri: string
@@ -11,6 +12,7 @@ export interface Config {
     secret: string,
     jwtSecret: string,
     jwtTokenExpiry: string
+    jwtAlgorithm: Algorithm
 }
 
 config();
@@ -21,8 +23,9 @@ const mongo: MongoConfig = {
     uri: process.env.MONGO_URI
 }
 const secret = process.env.SECRET_MESSAGE;
-const jwtTokenExpiry = process.env.JWTTOKENEXPIRY;
-const jwtSecret = process.env.JWTSECRET;
+const jwtTokenExpiry = process.env.JWT_TOKEN_EXPIRY;
+const jwtSecret = process.env.JWT_SECRET;
+const jwtAlgorithm: Algorithm = "HS256";
 
 
 const appConfig: Config = {
@@ -33,6 +36,7 @@ const appConfig: Config = {
     secret,
     jwtSecret,
     jwtTokenExpiry,
+    jwtAlgorithm
 }
 
 export {
