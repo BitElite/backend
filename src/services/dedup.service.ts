@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import dedupABI from "../constants/abi/dedup.json"
+import * as dedupABI from "../constants/abi/dedup.json"
 
 const privKey = process.env.ADMIN_PRIVATE_KEY;
 const contractAddress = process.env.DEDUP_CONTRACT_ADDRESS;
@@ -16,7 +16,6 @@ export default class DedupService {
     }
 
     async getPrice() { 
-        await this.dedupContract.getPrice("0x12345")
-        console.log("Called get price")
+        // console.log(this.dedupContract.getPrice())
     }
 }
