@@ -6,7 +6,8 @@ import * as logger from "./commons/logger";
 import * as error from "./commons/errorHandler"
 import * as routes from "./routes"
 import mongoose from "./commons/mongoose";
-import DedupService from 'services/dedup.service';
+//@ts-ignore
+import DedupService from './services/dedup.service';
 
 const app = express();
 
