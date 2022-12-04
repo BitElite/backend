@@ -1,6 +1,22 @@
 # BitElite Backend
 
-**Instructions to setup:**
+## Install node.js
+
+```bash
+# add PPA from NodeSource
+curl -sL https://deb.nodesource.com/setup_16.x -o nodesource_setup.sh
+
+# call the install script
+. nodesource_setup.sh
+
+# install node.js
+apt-get install -y nodejs
+
+# check the version
+node -v
+```
+
+## Instructions to setup
 
 1. git clone https://github.com/BitElite/backend.git
 2. npm install
