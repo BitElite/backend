@@ -23,15 +23,15 @@ const storage = multer.diskStorage({
   
 const upload = multer({ storage: storage })
 
-router.get('/asset/:ipfs_cid', isAuth, readAsset);
+router.post('/asset/ipfsCid', isAuth, readAsset);
 
 // uploads the file
 router.post('/asset', isAuth, upload.array("files", 1), fileHandler, createAsset);
 
 // verify tx
-router.get('/transaction/verify/:transactionHash', isAuth, verifyTransaction)
+router.post('/transaction/verify', isAuth, verifyTransaction)
 
 // get asset price
-router.get('/asset/price/:assetProof/:ipfsCid', isAuth, getAssetPrice)
+router.post('/asset/price', isAuth, getAssetPrice)
 
 export = router;

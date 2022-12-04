@@ -3,6 +3,7 @@ import { ReadStream } from 'fs';
 
 import DedupService from "./dedup.service";
 import getProofOfOwnership from "../utils/proofOfOwnership";
+import { isNull } from "lodash";
 
 const rimraf = require("rimraf");
 
@@ -24,7 +25,7 @@ export default class AssetService {
                     // Initialize dedup service
                     let dedupService = new DedupService();
                     // check the price of the asset
-                    let ipfsCid = payload.ipfsCid;
+                    let ipfsCid = payload.cid;
 
                     console.log(`ipfsCid --> ${ipfsCid}`)
                     console.log(`file.size --> ${file.size}`)
@@ -84,10 +85,12 @@ export default class AssetService {
 
         return new Promise(async (resolve, reject) => {
             try {
-                let asset = await this.asset.findOne({ ipfs_cid, deleted: false }, { deleted: 0 });
+                let asset: any = await this.asset.findOne({ipfs_cid});
                 if (!asset) {
-                    throw new Error("Asset not found");
+                    return resolve({message: "Asset not found"})
                 }
+
+                asset.message = "Asset found";
                 return resolve(asset);
             } catch (e) {
                 return reject(e);
@@ -99,12 +102,14 @@ export default class AssetService {
         return new Promise(async (resolve, reject) => {
             try {
 
-                let asset = await this.asset.findOne({ ipfs_cid, deleted: false }, { deleted: 0 });
-                if (!asset) {
+                let asset = await this.asset.findOne({ipfs_cid} );
+                console.log(`asset --> ${JSON.stringify(asset)}`)
+                
+                if (isNull(asset)) {
                     throw new Error("Asset not found");
                 }
                 // now perform db update
-                let response = await this.asset.updateOne({ ipfs_cid, deleted: false }, payload);
+                let response = await this.asset.updateOne({ ipfs_cid }, payload);
 
                 return resolve(response);
             } catch (e) {
@@ -116,7 +121,9 @@ export default class AssetService {
     getAssetPrice(assetProof: string, ipfsCid: string) {
         return new Promise(async (resolve, reject) => {
             try {
-
+                let dedupService = new DedupService();
+                let priceResponse = await dedupService.getPrice(assetProof, parseInt(ipfsCid));
+                return resolve(priceResponse);
             } catch (e) {
                 return reject(e);
             }

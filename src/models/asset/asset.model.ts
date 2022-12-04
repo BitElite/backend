@@ -25,7 +25,7 @@ export  type Query = {
     fileSize?: number;
     filePath?: string;
     ipfs_cid: string;
-    deleted: boolean | Date;
+    deleted?: boolean | Date;
 }
 
 

@@ -6,24 +6,25 @@ import DedupService from "../../services/dedup.service";
 import Web3StorageService from "../../services/web3storage.service";
 const path = require('path');
 import * as fs from 'fs';
+import { isNull } from "lodash";
 
 
 const readAsset = async (req: Request, res: Response, next: NextFunction) => {
     let assetService = new AssetService(new AssetModel());
     try {
-        let ipfs_cid = req.params.ipfs_cid;
+        let ipfs_cid = req.body.ipfs_cid;
 
         console.log(`ipfs_cid --> ${ipfs_cid}`)
         // check if asset exists in db
         let asset = await assetService.readAsset(ipfs_cid);
-        
+
         return res.send({
             success: true,
             data: {
                 asset
             }
         })
-        
+
     } catch (e) {
         console.log(e);
         return next(e)
@@ -36,6 +37,7 @@ const createAsset = async (req: any, res: Response, next: NextFunction) => {
         let payload = req.body
         const walletAddress = req.token.walletAddress;
         payload.walletAddress = walletAddress;
+        console.log(payload)
 
         const files = req.files as Express.Multer.File[];
 
@@ -44,7 +46,7 @@ const createAsset = async (req: any, res: Response, next: NextFunction) => {
         let absoluteFilePath = path.join(__dirname, '..', '..', '..', 'uploads', filename)
 
         let readable = fs.createReadStream(absoluteFilePath)
-        
+
         payload.readable = readable
 
         let response = await assetService.createAsset(payload, req.files);
@@ -68,7 +70,7 @@ const verifyTransaction = async (req: any, res: Response, next: NextFunction) =>
     let web3storage = new Web3StorageService()
 
     try {
-        let transactionHash = req.params.transactionHash
+        let transactionHash = req.body.transactionHash
 
         let txReceipt: any = await dedupService.getTransactionReceipt(transactionHash)
 
@@ -76,42 +78,51 @@ const verifyTransaction = async (req: any, res: Response, next: NextFunction) =>
 
         // TODO: complete verification of tx receipts
 
-        if(txReceipt.status === 1) {
-            let walletAddress = req.token.walletAddress;
-            let ipfsCid = req.body.ipfsCid;
-            let asset: any = await assetService.readAsset(ipfsCid);
+        // if(txReceipt.status === 1) {
+        let walletAddress = req.token.walletAddress;
+        console.log(`req body ${JSON.stringify(req.body)}`)
+        let ipfsCid = req.body.ipfsCid;
+        let asset: any = await assetService.readAsset(ipfsCid);
 
-            let filePath
-            if(asset) {
-                filePath = asset.filePath
-                let cid = await web3storage.put(filePath)
+        let filePath
+        let fileName
+        if (!isNull(asset)) {
+            console.log(`asset --> ${JSON.stringify(asset)}`)
+            console.log(`asset --> ${JSON.stringify(asset)}`)
+            filePath = asset.filePath
+            fileName = asset.fileName
+            let absoluteFilePath = path.join(__dirname, '..', '..', '..', filePath)
+            console.log(`absoluteFilePath --> ${absoluteFilePath}`)
 
-                if(cid === ipfsCid) {
-                    let fileOwners = asset.fileOwners;
-                    if (!fileOwners.includes(walletAddress)) {
-                        fileOwners.push(walletAddress);
-                        await assetService.updateAsset(ipfsCid, { fileOwners });
-                        // perform addOwner in dedup contract
-                        let addOwnerResponse = await dedupService.addOwner(ipfsCid, asset.fileSize, walletAddress)
+            let cid: any = await web3storage.put(absoluteFilePath)
+            console.log(`cid --> ${cid}`)
+            console.log(`ipfsCid --> ${ipfsCid}`)
 
-                        return res.send({
-                            success: true,
-                            data: {
-                                addOwnerResponse
-                            }
-                        })
+            let fileOwners = asset.fileOwners;
+            if (!fileOwners.includes(walletAddress)) {
+                fileOwners.push(walletAddress);
+                await assetService.updateAsset(ipfsCid, { fileOwners });
+                // perform addOwner in dedup contract
+                // change asset filesize from bytes to kb
+                let fileSizeInKB = Math.floor(asset.fileSize / 1024);
+
+                console.log(`fileSizeInKB --> ${fileSizeInKB}`)
+                let addOwnerResponse = await dedupService.addOwner(cid, fileSizeInKB, walletAddress)
+
+                return res.send({
+                    success: true,
+                    data: {
+                        addOwnerResponse
                     }
-                    return res.send({
-                        success: true,
-                        data: {
-                            message: "Asset verified"
-                        }
-                    })
-                }
+                })
             }
-
+            return res.send({
+                success: true,
+                data: {
+                    message: "Asset verified"
+                }
+            })
         }
-
         return res.send({
             success: true,
             data: {
@@ -129,14 +140,17 @@ const verifyTransaction = async (req: any, res: Response, next: NextFunction) =>
 const getAssetPrice = async (req: any, res: Response, next: NextFunction) => {
     let assetService = new AssetService(new AssetModel());
     try {
-        let assetProof = req.params.proof;
-        let ipfsCid = req.params.ipfsCid;
+        // let assetProof = req.params.assetProof;
+        let ipfsCid = req.body.ipfsCid;
+        let fileSize = req.body.fileSize;
 
-        let asset: any = await assetService.getAssetPrice(assetProof, ipfsCid);
-        if (!asset) {
-            return res.status(404).send({
+        let asset: any = await assetService.getAssetPrice(ipfsCid, fileSize);
+        if (isNull(asset)) {
+            return res.send({
                 success: false,
-                message: "Asset not found"
+                data: {
+                    message: "Asset does not exist"
+                }
             })
         }
 

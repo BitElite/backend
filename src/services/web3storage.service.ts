@@ -13,7 +13,7 @@ export default class Web3StorageService {
             try {
                 const file = await getFilesFromPath(path)
                 const cid = await this.storage.put(file)
-                return cid;
+                return resolve(cid);
             } catch (e) {
                 return reject(e);
             }
