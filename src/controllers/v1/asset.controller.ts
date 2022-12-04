@@ -143,7 +143,6 @@ const getAssetPrice = async (req: any, res: Response, next: NextFunction) => {
         // let assetProof = req.params.assetProof;
         let ipfsCid = req.body.ipfsCid;
         let fileSize = req.body.fileSize;
-
         let asset: any = await assetService.getAssetPrice(ipfsCid, fileSize);
         if (isNull(asset)) {
             return res.send({
@@ -158,7 +157,7 @@ const getAssetPrice = async (req: any, res: Response, next: NextFunction) => {
         return res.send({
             success: true,
             data: {
-                price
+                price: asset
             }
         })
 

@@ -118,11 +118,11 @@ export default class AssetService {
         })
     }
 
-    getAssetPrice(assetProof: string, ipfsCid: string) {
+    getAssetPrice(ipfsCid: string, sizeInKB: string) {
         return new Promise(async (resolve, reject) => {
             try {
                 let dedupService = new DedupService();
-                let priceResponse = await dedupService.getPrice(assetProof, parseInt(ipfsCid));
+                let priceResponse = await dedupService.getPrice(ipfsCid, parseInt(sizeInKB));
                 return resolve(priceResponse);
             } catch (e) {
                 return reject(e);

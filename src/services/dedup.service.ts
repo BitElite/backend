@@ -23,7 +23,7 @@ export default class DedupService {
         return new Promise(async (resolve, reject) => {
             try {
                 const result = await this.dedupContract.getCurrentPrice(
-                    ethers.utils.formatBytes32String(CID),
+                    CID,
                     sizeInKB
                 )
                 const formattedPrice = ethers.utils.formatEther(result.toNumber())
@@ -54,7 +54,7 @@ export default class DedupService {
         return new Promise(async (resolve, reject) => {
             try {
                 const result = await this.dedupContract.addOwner(
-                    ethers.utils.formatBytes32String(CID),
+                    CID,
                     sizeInKB,
                     owner
                 )
